@@ -2,7 +2,6 @@ import { useState, useCallback } from 'react'
 import {
   DndContext,
   DragEndEvent,
-  DragOverEvent,
   DragOverlay,
   DragStartEvent,
   PointerSensor,
@@ -12,15 +11,15 @@ import {
 } from '@dnd-kit/core'
 import {
   SortableContext,
-  arrayMove,
   rectSortingStrategy,
 } from '@dnd-kit/sortable'
 import { Plus, Link2, Download, Upload } from 'lucide-react'
 import { useStore } from './hooks/useStore'
 import { GroupSection } from './components/GroupSection'
-import { LinkCard, LinkCardOverlay } from './components/LinkCard'
+import { LinkCardOverlay } from './components/LinkCard'
 import { LinkModal } from './components/LinkModal'
 import { GroupModal } from './components/GroupModal'
+import { resolveDrop, ActiveData, OverData } from './store/resolveDrop'
 import { Group, Link } from './types'
 
 type ActiveItem =
@@ -87,9 +86,6 @@ export default function App() {
   const [linkModal, setLinkModal] = useState<LinkModalState | null>(null)
   const [groupModal, setGroupModal] = useState<GroupModalState | null>(null)
 
-  // Track current group state during drag for cross-group moves
-  const [overGroupId, setOverGroupId] = useState<string | null>(null)
-
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -106,29 +102,9 @@ export default function App() {
       setActiveItem({ type: 'group', group: data.group as Group })
     } else if (data?.type === 'link') {
       const link = data.link as Link
-      // Find which group this link belongs to
       const ownerGroup = groups.find((g) => g.links.some((l) => l.id === link.id))
       if (ownerGroup) {
         setActiveItem({ type: 'link', link, groupId: ownerGroup.id })
-        setOverGroupId(ownerGroup.id)
-      }
-    }
-  }, [groups])
-
-  const handleDragOver = useCallback((event: DragOverEvent) => {
-    const { over } = event
-    if (!over) return
-
-    const overData = over.data.current
-
-    if (overData?.type === 'group') {
-      setOverGroupId(overData.groupId as string)
-    } else if (overData?.type === 'link') {
-      // Find which group contains this link
-      const link = overData.link as Link
-      const ownerGroup = groups.find((g) => g.links.some((l) => l.id === link.id))
-      if (ownerGroup) {
-        setOverGroupId(ownerGroup.id)
       }
     }
   }, [groups])
@@ -136,81 +112,21 @@ export default function App() {
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event
     setActiveItem(null)
-    setOverGroupId(null)
 
-    if (!over) return
+    const action = resolveDrop(
+      groups,
+      { id: active.id as string, data: active.data.current as ActiveData },
+      over ? { id: over.id as string, data: over.data.current as OverData } : null
+    )
+    if (!action) return
 
-    const activeData = active.data.current
-    const overData = over.data.current
-
-    // ── Group reordering ──
-    if (activeData?.type === 'group') {
-      const activeGroupId = active.id as string
-      const overGroupId = over.id as string
-
-      if (activeGroupId === overGroupId) return
-
-      const oldIndex = groups.findIndex((g) => g.id === activeGroupId)
-      const newIndex = groups.findIndex((g) => g.id === overGroupId)
-
-      if (oldIndex !== -1 && newIndex !== -1) {
-        reorderGroups(arrayMove(groups, oldIndex, newIndex))
-      }
-      return
-    }
-
-    // ── Link reordering / moving ──
-    if (activeData?.type === 'link') {
-      const activeLinkId = active.id as string
-
-      // Find source group
-      const sourceGroup = groups.find((g) =>
-        g.links.some((l) => l.id === activeLinkId)
-      )
-      if (!sourceGroup) return
-
-      let destGroupId: string | null = null
-      let destLinkId: string | null = null
-
-      if (overData?.type === 'link') {
-        // Dropped onto a link — find its group
-        destLinkId = over.id as string
-        const destGroup = groups.find((g) =>
-          g.links.some((l) => l.id === destLinkId)
-        )
-        destGroupId = destGroup?.id ?? null
-      } else if (overData?.type === 'group') {
-        // Dropped onto a group droppable area
-        destGroupId = overData.groupId as string
-      }
-
-      if (!destGroupId) return
-
-      if (sourceGroup.id === destGroupId) {
-        // Same group reorder
-        const oldIndex = sourceGroup.links.findIndex((l) => l.id === activeLinkId)
-
-        if (destLinkId) {
-          const newIndex = sourceGroup.links.findIndex((l) => l.id === destLinkId)
-          if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
-            reorderLinks(sourceGroup.id, arrayMove(sourceGroup.links, oldIndex, newIndex))
-          }
-        }
-        // If dropped on group container with no link target, leave in place
-      } else {
-        // Cross-group move
-        const destGroup = groups.find((g) => g.id === destGroupId)
-        if (!destGroup) return
-
-        let toIndex = destGroup.links.length // default: append
-
-        if (destLinkId) {
-          const idx = destGroup.links.findIndex((l) => l.id === destLinkId)
-          if (idx !== -1) toIndex = idx
-        }
-
-        moveLinkToGroup(sourceGroup.id, destGroupId, activeLinkId, toIndex)
-      }
+    switch (action.kind) {
+      case 'reorder-groups':
+        return reorderGroups(action.fromIndex, action.toIndex)
+      case 'reorder-links':
+        return reorderLinks(action.groupId, action.fromIndex, action.toIndex)
+      case 'move-link':
+        return moveLinkToGroup(action.fromGroupId, action.toGroupId, action.linkId, action.toIndex)
     }
   }, [groups, reorderGroups, reorderLinks, moveLinkToGroup])
 
@@ -329,7 +245,6 @@ export default function App() {
             sensors={sensors}
             collisionDetection={closestCorners}
             onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
           >
             <SortableContext items={groupIds} strategy={rectSortingStrategy}>

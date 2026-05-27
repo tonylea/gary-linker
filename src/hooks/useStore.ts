@@ -133,10 +133,8 @@ export function useStore() {
     setGroups((prev) => ops.deleteLink(prev, groupId, linkId))
   }, [])
 
-  const reorderLinks = useCallback((groupId: string, newLinks: Link[]) => {
-    setGroups((prev) =>
-      prev.map((g) => (g.id === groupId ? { ...g, links: newLinks } : g))
-    )
+  const reorderLinks = useCallback((groupId: string, fromIndex: number, toIndex: number) => {
+    setGroups((prev) => ops.reorderLinks(prev, groupId, fromIndex, toIndex))
   }, [])
 
   const moveLinkToGroup = useCallback(
@@ -146,8 +144,8 @@ export function useStore() {
     []
   )
 
-  const reorderGroups = useCallback((newGroups: Group[]) => {
-    setGroups(newGroups)
+  const reorderGroups = useCallback((fromIndex: number, toIndex: number) => {
+    setGroups((prev) => ops.reorderGroups(prev, fromIndex, toIndex))
   }, [])
 
   const importGroups = useCallback((newGroups: Group[]) => {
