@@ -1,11 +1,4 @@
 ###############################################
-# Local Development                            #
-###############################################
-
-.env
-report/
-
-###############################################
 # MacOS                                       #
 ###############################################
 
@@ -35,90 +28,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-
-###############################################
-# Windows                                     #
-###############################################
-
-# Windows thumbnail cache files
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-
-# Windows dump file
-*.stackdump
-
-# Windows folder config file
-[Dd]esktop.ini
-
-# Windows Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-###############################################
-# Linux                                       #
-###############################################
-
-*~
-
-# temporary files which can be created if a process still has a handle open of a deleted file
-.fuse_hidden*
-
-# KDE directory preferences
-.directory
-
-# Linux trash folder which might appear on any partition or disk
-.Trash-*
-
-# .nfs files are created when an open file is removed but is still being accessed
-.nfs*
-
-###############################################
-# Archive                                     #
-###############################################
-
-# It's better to unpack these files and commit the raw source because
-# git has its own built in compression methods.
-*.7z
-*.jar
-*.rar
-*.zip
-*.gz
-*.gzip
-*.tgz
-*.bzip
-*.bzip2
-*.bz2
-*.xz
-*.lzma
-*.cab
-*.xar
-
-# Packing-only formats
-*.iso
-*.tar
-
-# Package management formats
-*.dmg
-*.xpi
-*.gem
-*.egg
-*.deb
-*.rpm
-*.msi
-*.msm
-*.msp
-*.txz
 
 ###############################################
 # Node                                        #
