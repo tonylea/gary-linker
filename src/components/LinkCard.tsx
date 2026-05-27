@@ -166,7 +166,6 @@ export function LinkCard({ link, onEdit, onDelete, compact = false }: LinkCardPr
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Drag handle */}
         <div
           data-no-nav
           data-testid={`drag-${link.id}`}
@@ -178,7 +177,6 @@ export function LinkCard({ link, onEdit, onDelete, compact = false }: LinkCardPr
           <GripVertical size={12} />
         </div>
 
-        {/* Icon */}
         <LinkIcon link={link} compact />
 
         {/* Name tooltip — instant */}
@@ -199,7 +197,6 @@ export function LinkCard({ link, onEdit, onDelete, compact = false }: LinkCardPr
           </div>
         )}
 
-        {/* Menu */}
         <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-100">
           <LinkMenu
             onEdit={() => onEdit(link)}
@@ -223,7 +220,6 @@ export function LinkCard({ link, onEdit, onDelete, compact = false }: LinkCardPr
       className="group relative flex items-start gap-3 p-4 rounded-xl cursor-pointer bg-gray-900 border border-gray-800 hover:border-gray-600 hover:bg-gray-800/70 transition-all duration-150 ease-in-out"
       onClick={handleClick}
     >
-      {/* Drag handle */}
       <div
         data-no-nav
         data-testid={`drag-${link.id}`}
@@ -235,12 +231,10 @@ export function LinkCard({ link, onEdit, onDelete, compact = false }: LinkCardPr
         <GripVertical size={16} />
       </div>
 
-      {/* Icon */}
       <div className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-lg bg-gray-800 border border-gray-700 overflow-hidden">
         <LinkIcon link={link} />
       </div>
 
-      {/* Content */}
       <div className="flex-1 min-w-0 pr-6">
         <p className="font-semibold text-white text-sm leading-tight truncate">{link.name}</p>
         {link.description && (

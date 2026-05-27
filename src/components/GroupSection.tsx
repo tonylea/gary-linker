@@ -75,7 +75,6 @@ function GroupHeader({
 
         {menuOpen && (
           <div className="absolute right-0 top-full mt-1.5 z-50 w-44 rounded-xl border border-gray-700 bg-gray-900 shadow-xl shadow-black/60 overflow-hidden">
-            {/* Width picker */}
             <div className="px-3 py-2.5 border-b border-gray-800">
               <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1.5">Width</p>
               <div className="flex gap-1">
@@ -96,7 +95,6 @@ function GroupHeader({
               </div>
             </div>
 
-            {/* Actions */}
             <div className="p-1">
               <button
                 onClick={() => { onRename(); setMenuOpen(false) }}

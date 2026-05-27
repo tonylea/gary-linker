@@ -24,7 +24,6 @@ export function LinkModal({ groupId, link, onSave, onClose }: LinkModalProps) {
     nameRef.current?.focus()
   }, [])
 
-  // Close on Escape
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
@@ -68,7 +67,6 @@ export function LinkModal({ groupId, link, onSave, onClose }: LinkModalProps) {
       }}
     >
       <div className="w-full max-w-md bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl shadow-black/60">
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
           <h2 className="text-base font-semibold text-white">
             {link ? 'Edit Link' : 'Add Link'}
@@ -81,9 +79,7 @@ export function LinkModal({ groupId, link, onSave, onClose }: LinkModalProps) {
           </button>
         </div>
 
-        {/* Body */}
         <div className="px-6 py-5 space-y-4">
-          {/* Name */}
           <div>
             <label className="block text-xs font-medium text-gray-400 mb-1.5">
               Name <span className="text-red-400">*</span>
@@ -109,7 +105,6 @@ export function LinkModal({ groupId, link, onSave, onClose }: LinkModalProps) {
             )}
           </div>
 
-          {/* URL */}
           <div>
             <label className="block text-xs font-medium text-gray-400 mb-1.5">
               URL <span className="text-red-400">*</span>
@@ -134,7 +129,6 @@ export function LinkModal({ groupId, link, onSave, onClose }: LinkModalProps) {
             )}
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-xs font-medium text-gray-400 mb-1.5">
               Description
@@ -153,7 +147,6 @@ export function LinkModal({ groupId, link, onSave, onClose }: LinkModalProps) {
             />
           </div>
 
-          {/* Icon emoji */}
           <div>
             <label className="block text-xs font-medium text-gray-400 mb-1.5">
               Icon emoji
@@ -174,7 +167,6 @@ export function LinkModal({ groupId, link, onSave, onClose }: LinkModalProps) {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-800">
           <button
             onClick={onClose}

@@ -144,7 +144,6 @@ export default function App() {
     }
   }, [groups, reorderGroups, reorderLinks, moveLinkToGroup])
 
-  // Modal handlers
   const handleOpenAddLink = useCallback((groupId: string) => {
     setLinkModal({ groupId })
   }, [])
@@ -187,7 +186,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#0f1117' }}>
-      {/* Header */}
       <header className="sticky top-0 z-30 border-b border-gray-800/60 backdrop-blur-md" style={{ backgroundColor: 'rgba(15,17,23,0.85)' }}>
         <div className="max-w-screen-xl mx-auto px-6 py-4 flex items-center gap-4">
           <div className="flex items-center gap-2.5 flex-shrink-0">
@@ -236,7 +234,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main content */}
       <main className="max-w-screen-xl mx-auto px-6 py-8">
         {groups.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-32 text-center">
@@ -318,7 +315,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Link Modal */}
       {linkModal && (
         <LinkModal
           groupId={linkModal.groupId}
@@ -328,7 +324,6 @@ export default function App() {
         />
       )}
 
-      {/* Group Modal */}
       {groupModal !== null && (
         <GroupModal
           initialName={groupModal.group?.name}

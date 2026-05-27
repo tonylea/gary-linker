@@ -51,7 +51,6 @@ export function GroupModal({ initialName = '', onSave, onClose }: GroupModalProp
       }}
     >
       <div className="w-full max-w-sm bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl shadow-black/60">
-        {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
           <h2 className="text-base font-semibold text-white">
             {isEditing ? 'Rename Group' : 'New Group'}
@@ -64,7 +63,6 @@ export function GroupModal({ initialName = '', onSave, onClose }: GroupModalProp
           </button>
         </div>
 
-        {/* Body */}
         <div className="px-5 py-4">
           <label className="block text-xs font-medium text-gray-400 mb-1.5">
             Group name <span className="text-red-400">*</span>
@@ -88,7 +86,6 @@ export function GroupModal({ initialName = '', onSave, onClose }: GroupModalProp
           {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-end gap-3 px-5 py-4 border-t border-gray-800">
           <button
             onClick={onClose}
