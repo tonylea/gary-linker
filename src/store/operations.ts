@@ -1,12 +1,20 @@
 import { arrayMove } from '@dnd-kit/sortable'
 import { Group, GroupWidth, Link } from '../types'
 
+function mapGroup(groups: Group[], groupId: string, fn: (group: Group) => Group): Group[] {
+  return groups.map((g) => (g.id === groupId ? fn(g) : g))
+}
+
+function mapGroupLinks(groups: Group[], groupId: string, fn: (links: Link[]) => Link[]): Group[] {
+  return mapGroup(groups, groupId, (g) => ({ ...g, links: fn(g.links) }))
+}
+
 export function addGroup(groups: Group[], group: Group): Group[] {
   return [...groups, group]
 }
 
 export function renameGroup(groups: Group[], groupId: string, name: string): Group[] {
-  return groups.map((g) => (g.id === groupId ? { ...g, name } : g))
+  return mapGroup(groups, groupId, (g) => ({ ...g, name }))
 }
 
 export function deleteGroup(groups: Group[], groupId: string): Group[] {
@@ -14,7 +22,7 @@ export function deleteGroup(groups: Group[], groupId: string): Group[] {
 }
 
 export function setGroupWidth(groups: Group[], groupId: string, width: GroupWidth): Group[] {
-  return groups.map((g) => (g.id === groupId ? { ...g, width } : g))
+  return mapGroup(groups, groupId, (g) => ({ ...g, width }))
 }
 
 export function reorderGroups(groups: Group[], fromIndex: number, toIndex: number): Group[] {
@@ -22,25 +30,17 @@ export function reorderGroups(groups: Group[], fromIndex: number, toIndex: numbe
 }
 
 export function addLink(groups: Group[], groupId: string, link: Link): Group[] {
-  return groups.map((g) =>
-    g.id === groupId ? { ...g, links: [...g.links, link] } : g
-  )
+  return mapGroupLinks(groups, groupId, (links) => [...links, link])
 }
 
 export function updateLink(groups: Group[], groupId: string, link: Link): Group[] {
-  return groups.map((g) =>
-    g.id === groupId
-      ? { ...g, links: g.links.map((l) => (l.id === link.id ? link : l)) }
-      : g
+  return mapGroupLinks(groups, groupId, (links) =>
+    links.map((l) => (l.id === link.id ? link : l))
   )
 }
 
 export function deleteLink(groups: Group[], groupId: string, linkId: string): Group[] {
-  return groups.map((g) =>
-    g.id === groupId
-      ? { ...g, links: g.links.filter((l) => l.id !== linkId) }
-      : g
-  )
+  return mapGroupLinks(groups, groupId, (links) => links.filter((l) => l.id !== linkId))
 }
 
 export function reorderLinks(
@@ -49,9 +49,7 @@ export function reorderLinks(
   fromIndex: number,
   toIndex: number
 ): Group[] {
-  return groups.map((g) =>
-    g.id === groupId ? { ...g, links: arrayMove(g.links, fromIndex, toIndex) } : g
-  )
+  return mapGroupLinks(groups, groupId, (links) => arrayMove(links, fromIndex, toIndex))
 }
 
 export function moveLinkToGroup(
