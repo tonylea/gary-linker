@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { X } from 'lucide-react'
 import { Link } from '../types'
+import { normalizeUrl } from '../lib/url'
+import { validateLinkForm } from '../lib/validation'
 
 interface LinkModalProps {
   groupId: string
@@ -31,36 +33,18 @@ export function LinkModal({ groupId, link, onSave, onClose }: LinkModalProps) {
     return () => window.removeEventListener('keydown', handler)
   }, [onClose])
 
-  const validate = () => {
-    const errs: { name?: string; url?: string } = {}
-    if (!name.trim()) errs.name = 'Name is required'
-    if (!url.trim()) {
-      errs.url = 'URL is required'
-    } else {
-      try {
-        new URL(url.trim().startsWith('http') ? url.trim() : `https://${url.trim()}`)
-      } catch {
-        errs.url = 'Enter a valid URL'
-      }
-    }
-    return errs
-  }
-
   const handleSave = () => {
-    const errs = validate()
+    const errs = validateLinkForm({ name, url })
     if (Object.keys(errs).length > 0) {
       setErrors(errs)
       return
     }
 
-    const normalizedUrl =
-      url.trim().startsWith('http') ? url.trim() : `https://${url.trim()}`
-
     onSave(
       groupId,
       {
         name: name.trim(),
-        url: normalizedUrl,
+        url: normalizeUrl(url),
         description: description.trim() || undefined,
         icon: icon.trim() || undefined,
       },
