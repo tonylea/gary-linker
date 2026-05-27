@@ -53,6 +53,7 @@ function GroupHeader({
   return (
     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-800 min-w-0">
       <div
+        data-testid={`drag-${group.id}`}
         {...dragHandle.attributes}
         {...dragHandle.listeners}
         className="text-gray-700 hover:text-gray-500 cursor-grab active:cursor-grabbing transition-colors duration-100 flex-shrink-0"
@@ -174,7 +175,7 @@ export function GroupSection({
   const compact = group.width !== undefined && group.width !== 'full'
 
   return (
-    <div ref={setSortableRef} style={style}>
+    <div ref={setSortableRef} style={style} data-testid={group.id}>
       <div
         ref={setDroppableRef}
         className={`

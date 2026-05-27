@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react'
 import {
+  CollisionDetection,
   DndContext,
   DragEndEvent,
   DragOverlay,
@@ -26,6 +27,19 @@ type ActiveItem =
   | { type: 'group'; group: Group }
   | { type: 'link'; link: Link; groupId: string }
   | null
+
+// When dragging a group, restrict collisions to group sortables. Otherwise the
+// target's link cards sit closest to the dragged group's rect and win, so the
+// drop never lands on a group and reordering silently fails.
+const collisionDetection: CollisionDetection = (args) => {
+  if (args.active.data.current?.type === 'group') {
+    const groupSortables = args.droppableContainers.filter(
+      (c) => c.data.current?.type === 'group' && 'group' in c.data.current
+    )
+    return closestCorners({ ...args, droppableContainers: groupSortables })
+  }
+  return closestCorners(args)
+}
 
 interface LinkModalState {
   groupId: string
@@ -243,7 +257,7 @@ export default function App() {
         ) : (
           <DndContext
             sensors={sensors}
-            collisionDetection={closestCorners}
+            collisionDetection={collisionDetection}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           >

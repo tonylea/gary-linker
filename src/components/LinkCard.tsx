@@ -176,6 +176,7 @@ export function LinkCard({ link, onEdit, onDelete, compact = false }: LinkCardPr
       <div
         ref={setNodeRef}
         style={style}
+        data-testid={link.id}
         className="group relative aspect-square flex items-center justify-center rounded-xl cursor-pointer bg-gray-900 border border-gray-800 hover:border-gray-600 hover:bg-gray-800/70 transition-all duration-150"
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
@@ -184,6 +185,7 @@ export function LinkCard({ link, onEdit, onDelete, compact = false }: LinkCardPr
         {/* Drag handle */}
         <div
           data-no-nav
+          data-testid={`drag-${link.id}`}
           {...attributes}
           {...listeners}
           className="absolute top-1.5 left-1.5 text-gray-700 hover:text-gray-400 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity duration-100"
@@ -233,12 +235,14 @@ export function LinkCard({ link, onEdit, onDelete, compact = false }: LinkCardPr
     <div
       ref={setNodeRef}
       style={style}
+      data-testid={link.id}
       className="group relative flex items-start gap-3 p-4 rounded-xl cursor-pointer bg-gray-900 border border-gray-800 hover:border-gray-600 hover:bg-gray-800/70 transition-all duration-150 ease-in-out"
       onClick={handleClick}
     >
       {/* Drag handle */}
       <div
         data-no-nav
+        data-testid={`drag-${link.id}`}
         {...attributes}
         {...listeners}
         className="flex-shrink-0 mt-0.5 text-gray-700 hover:text-gray-400 cursor-grab active:cursor-grabbing transition-colors duration-100"
