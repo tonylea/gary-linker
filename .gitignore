@@ -50,6 +50,11 @@ dist/
 # Vite cache
 .vite/
 
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
 # npm cache
 .npm
 
