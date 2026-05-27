@@ -2,41 +2,30 @@
 
 A local dashboard for organising links — dark, minimal, drag-and-drop.
 
-## First-time setup
+## Setup & deploy
 
-Run this once from the project folder:
+From the project folder:
 
 ```bash
-./setup.sh
+npm install
+npm run deploy
 ```
 
-This will:
-1. Build the app
-2. Generate `start.sh` with the correct paths for your machine
-3. Install a LaunchAgent so the server starts automatically at every login
-4. Start the server immediately
+`deploy` builds the app, installs a LaunchAgent so the server starts
+automatically at every login, and starts it immediately. It's idempotent —
+run it again any time you change the source to rebuild and restart.
 
 Then open **http://localhost:5173** in your browser. Set it as your homepage if you like.
 
-## After making code changes
+## Remove
 
-If you edit the source and want to deploy the changes:
-
-```bash
-./rebuild.sh
-```
-
-This rebuilds the app and restarts the server.
-
-## Uninstall
-
-To remove the auto-start service:
+To stop the server and remove the auto-start service:
 
 ```bash
-./uninstall.sh
+npm run remove
 ```
 
-This stops the server and removes the LaunchAgent. Your data (links/groups) stays in browser localStorage.
+This removes the LaunchAgent. Your data (links/groups) stays in browser localStorage.
 
 ## Backup & restore
 
