@@ -29,6 +29,8 @@ function LinkIcon({ link, compact = false }: { link: Link; compact?: boolean }) 
       <img
         src={getFaviconUrl(link.url)}
         alt=""
+        loading="lazy"
+        decoding="async"
         className={compact ? 'w-9 h-9 object-contain' : 'w-6 h-6 object-contain'}
         onError={() => setImgError(true)}
       />
