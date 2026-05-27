@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en-GB",
+  "ignorePaths": [
+    "dist",
+    "node_modules",
+    "package-lock.json",
+    "playwright-report",
+    "test-results"
+  ],
+  "words": [
+    "dnd",
+    "dndkit",
+    "Droppable",
+    "favicons",
+    "garylinker",
+    "localStorage",
+    "Pressable",
+    "Sortable",
+    "tseslint",
+    "unparseable",
+    "vite",
+    "vitest"
+  ]
+}

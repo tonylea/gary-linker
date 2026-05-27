@@ -15,7 +15,7 @@ npm run deploy
 automatically at every login, and starts it immediately. It's idempotent —
 run it again any time you change the source to rebuild and restart.
 
-Then open **http://localhost:5173** in your browser. Set it as your homepage if you like.
+Then open **<http://localhost:5173>** in your browser. Set it as your homepage if you like.
 
 ## Remove
 
