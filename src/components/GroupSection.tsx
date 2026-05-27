@@ -1,10 +1,13 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { GripVertical, MoreHorizontal, Pencil, Trash2, Plus } from 'lucide-react'
 import { Group, GroupWidth, Link } from '../types'
+import { useClickOutside } from '../hooks/useClickOutside'
 import { LinkCard } from './LinkCard'
+
+type SortableHandle = Pick<ReturnType<typeof useSortable>, 'attributes' | 'listeners'>
 
 interface GroupSectionProps {
   group: Group
@@ -29,38 +32,29 @@ function GroupHeader({
   onRename,
   onDelete,
   onSetWidth,
-  dragHandleProps,
-  dragHandleAttributes,
+  dragHandle,
 }: {
   group: Group
   onRename: () => void
   onDelete: () => void
   onSetWidth: (width: GroupWidth) => void
-  dragHandleProps: Record<string, unknown>
-  dragHandleAttributes: Record<string, unknown>
+  dragHandle: SortableHandle
 }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const currentWidth = group.width ?? 'full'
 
-  useEffect(() => {
-    if (!menuOpen) return
-    const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false)
-        setShowConfirm(false)
-      }
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [menuOpen])
+  useClickOutside(menuRef, () => {
+    setMenuOpen(false)
+    setShowConfirm(false)
+  }, menuOpen)
 
   return (
     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-800 min-w-0">
       <div
-        {...dragHandleAttributes}
-        {...dragHandleProps}
+        {...dragHandle.attributes}
+        {...dragHandle.listeners}
         className="text-gray-700 hover:text-gray-500 cursor-grab active:cursor-grabbing transition-colors duration-100 flex-shrink-0"
       >
         <GripVertical size={16} />
@@ -196,8 +190,7 @@ export function GroupSection({
           onRename={() => onRenameGroup(group)}
           onDelete={() => onDeleteGroup(group.id)}
           onSetWidth={(width) => onSetWidth(group.id, width)}
-          dragHandleProps={listeners as Record<string, unknown>}
-          dragHandleAttributes={attributes as Record<string, unknown>}
+          dragHandle={{ attributes, listeners }}
         />
 
         <SortableContext items={linkIds} strategy={rectSortingStrategy}>

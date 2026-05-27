@@ -3,6 +3,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { GripVertical, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { Link } from '../types'
+import { useClickOutside } from '../hooks/useClickOutside'
 
 interface LinkCardProps {
   link: Link
@@ -145,17 +146,10 @@ export function LinkCard({ link, onEdit, onDelete, compact = false }: LinkCardPr
     setShowDesc(false)
   }
 
-  useEffect(() => {
-    if (!menuOpen) return
-    const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false)
-        setShowConfirm(false)
-      }
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [menuOpen])
+  useClickOutside(menuRef, () => {
+    setMenuOpen(false)
+    setShowConfirm(false)
+  }, menuOpen)
 
   const {
     attributes,
