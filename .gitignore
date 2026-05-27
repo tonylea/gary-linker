@@ -41,7 +41,7 @@ npm-debug.log*
 # Dependencies
 node_modules/
 
-# Build output — regenerate with ./setup.sh or ./rebuild.sh
+# Build output — regenerate with `npm run deploy`
 dist/
 
 # TypeScript incremental build cache
