@@ -21,6 +21,7 @@ import { LinkCardOverlay } from './components/LinkCard'
 import { LinkModal } from './components/LinkModal'
 import { GroupModal } from './components/GroupModal'
 import { resolveDrop, ActiveData, OverData } from './store/resolveDrop'
+import { backupFilename, parseBackup, serializeGroups } from './store/backup'
 import { googleSearchUrl } from './lib/url'
 import { Group, Link } from './types'
 
@@ -68,12 +69,11 @@ export default function App() {
   } = useStore()
 
   const handleExport = useCallback(() => {
-    const json = JSON.stringify(groups, null, 2)
-    const blob = new Blob([json], { type: 'application/json' })
+    const blob = new Blob([serializeGroups(groups)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `linker-backup-${new Date().toISOString().slice(0, 10)}.json`
+    a.download = backupFilename(new Date())
     a.click()
     URL.revokeObjectURL(url)
   }, [groups])
@@ -84,10 +84,9 @@ export default function App() {
     const reader = new FileReader()
     reader.onload = (ev) => {
       try {
-        const parsed = JSON.parse(ev.target?.result as string)
-        if (!Array.isArray(parsed)) throw new Error('Invalid format')
-        if (window.confirm(`Replace all current links with the backup? (${parsed.length} group${parsed.length !== 1 ? 's' : ''})`)) {
-          importGroups(parsed)
+        const imported = parseBackup(ev.target?.result as string)
+        if (window.confirm(`Replace all current links with the backup? (${imported.length} group${imported.length !== 1 ? 's' : ''})`)) {
+          importGroups(imported)
         }
       } catch {
         alert('Could not read the file — make sure it\'s a valid Linker backup.')
