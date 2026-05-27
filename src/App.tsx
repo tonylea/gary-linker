@@ -21,6 +21,7 @@ import { LinkCardOverlay } from './components/LinkCard'
 import { LinkModal } from './components/LinkModal'
 import { GroupModal } from './components/GroupModal'
 import { resolveDrop, ActiveData, OverData } from './store/resolveDrop'
+import { googleSearchUrl } from './lib/url'
 import { Group, Link } from './types'
 
 type ActiveItem =
@@ -202,8 +203,9 @@ export default function App() {
             placeholder="Google search..."
             className="flex-1 bg-gray-800/70 border border-gray-700 rounded-xl px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:bg-gray-800 transition-colors duration-150"
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && e.currentTarget.value.trim()) {
-                window.location.href = `https://www.google.com/search?q=${encodeURIComponent(e.currentTarget.value.trim())}`
+              const query = e.currentTarget.value.trim()
+              if (e.key === 'Enter' && query) {
+                window.location.href = googleSearchUrl(query)
                 e.currentTarget.value = ''
               }
             }}

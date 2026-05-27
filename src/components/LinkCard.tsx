@@ -4,6 +4,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { GripVertical, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { Link } from '../types'
 import { useClickOutside } from '../hooks/useClickOutside'
+import { getDomain, getFaviconUrl } from '../lib/url'
 
 interface LinkCardProps {
   link: Link
@@ -11,23 +12,6 @@ interface LinkCardProps {
   onEdit: (link: Link) => void
   onDelete: (linkId: string) => void
   compact?: boolean
-}
-
-function getFaviconUrl(url: string): string {
-  try {
-    const domain = new URL(url).hostname
-    return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`
-  } catch {
-    return ''
-  }
-}
-
-function getDomain(url: string): string {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '')
-  } catch {
-    return url
-  }
 }
 
 function LinkIcon({ link, compact = false }: { link: Link; compact?: boolean }) {
