@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Group, GroupWidth, Link } from '../types'
+import * as ops from '../store/operations'
 
 const STORAGE_KEY = 'linker-data'
 
@@ -109,51 +110,27 @@ export function useStore() {
   }, [groups])
 
   const addGroup = useCallback((name: string) => {
-    const newGroup: Group = {
-      id: generateId(),
-      name,
-      links: [],
-    }
-    setGroups((prev) => [...prev, newGroup])
+    setGroups((prev) => ops.addGroup(prev, { id: generateId(), name, links: [] }))
   }, [])
 
   const renameGroup = useCallback((groupId: string, name: string) => {
-    setGroups((prev) =>
-      prev.map((g) => (g.id === groupId ? { ...g, name } : g))
-    )
+    setGroups((prev) => ops.renameGroup(prev, groupId, name))
   }, [])
 
   const deleteGroup = useCallback((groupId: string) => {
-    setGroups((prev) => prev.filter((g) => g.id !== groupId))
+    setGroups((prev) => ops.deleteGroup(prev, groupId))
   }, [])
 
   const addLink = useCallback((groupId: string, link: Omit<Link, 'id'>) => {
-    const newLink: Link = { ...link, id: generateId() }
-    setGroups((prev) =>
-      prev.map((g) =>
-        g.id === groupId ? { ...g, links: [...g.links, newLink] } : g
-      )
-    )
+    setGroups((prev) => ops.addLink(prev, groupId, { ...link, id: generateId() }))
   }, [])
 
   const updateLink = useCallback((groupId: string, link: Link) => {
-    setGroups((prev) =>
-      prev.map((g) =>
-        g.id === groupId
-          ? { ...g, links: g.links.map((l) => (l.id === link.id ? link : l)) }
-          : g
-      )
-    )
+    setGroups((prev) => ops.updateLink(prev, groupId, link))
   }, [])
 
   const deleteLink = useCallback((groupId: string, linkId: string) => {
-    setGroups((prev) =>
-      prev.map((g) =>
-        g.id === groupId
-          ? { ...g, links: g.links.filter((l) => l.id !== linkId) }
-          : g
-      )
-    )
+    setGroups((prev) => ops.deleteLink(prev, groupId, linkId))
   }, [])
 
   const reorderLinks = useCallback((groupId: string, newLinks: Link[]) => {
@@ -164,26 +141,7 @@ export function useStore() {
 
   const moveLinkToGroup = useCallback(
     (fromGroupId: string, toGroupId: string, linkId: string, toIndex: number) => {
-      setGroups((prev) => {
-        const fromGroup = prev.find((g) => g.id === fromGroupId)
-        if (!fromGroup) return prev
-
-        const link = fromGroup.links.find((l) => l.id === linkId)
-        if (!link) return prev
-
-        return prev.map((g) => {
-          if (g.id === fromGroupId) {
-            return { ...g, links: g.links.filter((l) => l.id !== linkId) }
-          }
-          if (g.id === toGroupId) {
-            const newLinks = [...g.links]
-            const clampedIndex = Math.min(toIndex, newLinks.length)
-            newLinks.splice(clampedIndex, 0, link)
-            return { ...g, links: newLinks }
-          }
-          return g
-        })
-      })
+      setGroups((prev) => ops.moveLinkToGroup(prev, fromGroupId, toGroupId, linkId, toIndex))
     },
     []
   )
@@ -197,9 +155,7 @@ export function useStore() {
   }, [])
 
   const setGroupWidth = useCallback((groupId: string, width: GroupWidth) => {
-    setGroups((prev) =>
-      prev.map((g) => (g.id === groupId ? { ...g, width } : g))
-    )
+    setGroups((prev) => ops.setGroupWidth(prev, groupId, width))
   }, [])
 
   return {
