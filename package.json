@@ -10,7 +10,7 @@
     "lint": "npm run lint:editorconfig && npm run lint:markdown && npm run lint:spelling && npm run lint:types && npm run lint:eslint",
     "lint:editorconfig": "editorconfig-checker",
     "lint:eslint": "eslint .",
-    "lint:markdown": "markdownlint \"**/*.md\" --ignore node_modules --ignore dist --ignore playwright-report",
+    "lint:markdown": "markdownlint \"**/*.md\" --ignore node_modules --ignore dist --ignore playwright-report --ignore test-results",
     "lint:spelling": "cspell README.md \"src/**/*.{ts,tsx,css}\" \"e2e/**/*.ts\" \"*.config.{js,ts}\" \"scripts/**/*\"",
     "lint:types": "tsc -b --pretty false",
     "prepare": "husky",

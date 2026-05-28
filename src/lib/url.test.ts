@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getDomain, getFaviconUrl, googleSearchUrl, isValidUrl, normalizeUrl } from './url'
+import { getDomain, getFaviconUrls, googleSearchUrl, isValidUrl, normalizeUrl } from './url'
 
 describe('normalizeUrl', () => {
   it('prepends https:// when no scheme is present', () => {
@@ -37,15 +37,17 @@ describe('getDomain', () => {
   })
 })
 
-describe('getFaviconUrl', () => {
-  it('builds a favicon service URL for the host', () => {
-    expect(getFaviconUrl('https://github.com/foo')).toBe(
-      'https://www.google.com/s2/favicons?domain=github.com&sz=64'
-    )
+describe('getFaviconUrls', () => {
+  it('returns candidate favicon URLs in priority order', () => {
+    expect(getFaviconUrls('https://github.com/foo')).toEqual([
+      'https://github.com/favicon.ico',
+      'https://www.google.com/s2/favicons?domain=github.com&sz=64',
+      'https://icons.duckduckgo.com/ip3/github.com.ico',
+    ])
   })
 
-  it('returns an empty string for an invalid URL', () => {
-    expect(getFaviconUrl('nonsense')).toBe('')
+  it('returns an empty array for an invalid URL', () => {
+    expect(getFaviconUrls('nonsense')).toEqual([])
   })
 })
 

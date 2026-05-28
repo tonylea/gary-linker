@@ -20,12 +20,16 @@ export function getDomain(url: string): string {
   }
 }
 
-export function getFaviconUrl(url: string): string {
+export function getFaviconUrls(url: string): string[] {
   try {
-    const domain = new URL(url).hostname
-    return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`
+    const { hostname, origin } = new URL(url)
+    return [
+      `${origin}/favicon.ico`,
+      `https://www.google.com/s2/favicons?domain=${hostname}&sz=64`,
+      `https://icons.duckduckgo.com/ip3/${hostname}.ico`,
+    ]
   } catch {
-    return ''
+    return []
   }
 }
 

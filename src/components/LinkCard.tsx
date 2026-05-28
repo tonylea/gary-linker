@@ -4,7 +4,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { GripVertical, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { Link } from '../types'
 import { useClickOutside } from '../hooks/useClickOutside'
-import { getDomain, getFaviconUrl } from '../lib/url'
+import { getDomain, getFaviconUrls } from '../lib/url'
 
 interface LinkCardProps {
   link: Link
@@ -15,7 +15,8 @@ interface LinkCardProps {
 }
 
 function LinkIcon({ link, compact = false }: { link: Link; compact?: boolean }) {
-  const [imgError, setImgError] = useState(false)
+  const faviconUrls = getFaviconUrls(link.url)
+  const [urlIndex, setUrlIndex] = useState(0)
 
   if (link.icon) {
     return (
@@ -24,15 +25,15 @@ function LinkIcon({ link, compact = false }: { link: Link; compact?: boolean }) 
       </span>
     )
   }
-  if (!imgError) {
+  if (urlIndex < faviconUrls.length) {
     return (
       <img
-        src={getFaviconUrl(link.url)}
+        src={faviconUrls[urlIndex]}
         alt=""
         loading="lazy"
         decoding="async"
         className={compact ? 'w-9 h-9 object-contain' : 'w-6 h-6 object-contain'}
-        onError={() => setImgError(true)}
+        onError={() => setUrlIndex((i) => i + 1)}
       />
     )
   }
