@@ -198,6 +198,7 @@ export default function App() {
           <input
             type="search"
             placeholder="Google search..."
+            autoFocus
             className="flex-1 bg-gray-800/70 border border-gray-700 rounded-xl px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:bg-gray-800 transition-colors duration-150"
             onKeyDown={(e) => {
               const query = e.currentTarget.value.trim()
